@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style type="text/css">
+        body {
+        background-color: #F3EBF6;
+        font-family: 'Ubuntu', sans-serif;
+    }
+
+    #task_manager:hover{
+      cursor:pointer;
+    }
+
+    .main {
+        background-color: #FFFFFF;
+        width: 300px;
+        height: 300px;
+        margin: 3em auto;
+        margin-left: 10px;
+        margin-right: 10px;
+        border-radius: 1.5em;
+        box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+        display: inline-block;
+    }
+
+
+    .sign {
+        padding-top: 0px;
+        color: #8C55AA;
+        font-family: 'Ubuntu', sans-serif;
+        font-weight: bold;
+        font-size: 23px;
+        border-style: solid;border-width: 1px;padding: 10px;width: 200px;
+        background-color: #F3EBF6;
+        transition: 1s;
+    }
+
+    .sign:hover{
+        cursor: pointer;
+        background-color: #8C55AA;
+        color: #F3EBF6;
+    }
+
+    @media (max-width: 600px) {
+        .main {
+            border-radius: 0px;
+        }
+
+
+
+  </style>
+  <title>Vesit Satta League 2021</title>
+
+</head>
+
+<body>
+<div style="align:center;margin-left:13%;">
+  <div  style="align:center;display: inline-block;line-height:100px;" id="group_of_controls">
+      <div align="center">
+          <div class="main" id="lights">
+              <a align="center" style="font-size: 30px;text-decoration:none;color:black;" href=""><b>Lights</b></a>
+          </div>
+          <div class="main" id="shaker">
+              <a align="center" style="font-size: 30px;text-decoration:none;color:black;" href=""><b>Shaker</b></a>
+          </div>
+          <div class="main" id="dispensor">
+              <a align="center" style="font-size: 30px;text-decoration:none;color:black;" href=""><b>Dispensor</b></a>
+          </div>
+
+      </div>
+      <div align="center">
+
+          <div class="main" id="coffee">
+              <a align="center" style="font-size: 30px;text-decoration:none;color:black;" href=""><b>Coffee</b></a>
+          </div>
+          <div class="main" id="add_task">
+              <a align="center" style="font-size: 30px;text-decoration:none;color:black;" href=""><b>Add Task</b></a>
+          </div>
+          <div class="main" id="ongoing_task">
+              <a align="center" style="font-size: 30px;text-decoration:none;color:black;" href=""><b>On Going Task</b></a>
+          </div>
+      </div>
+  </div>
+
+  <div  style="float:left;display: inline-block" id="ongoing_task">
+      <div align="center">
+          <div class="main" style="height:700px;" id="task_manager" >
+            <div style="border-style:solid;border-width:1px;border-top-left-radius:1.5em;border-top-right-radius:1.5em;padding:10px;">
+                <a align="center" style="font-size: 30px;text-decoration:none;color:black;" href=""><b>On Going Tasks</b></a>
+            </div>
+            <div id="ongoing_task_add">
+
+            </div>
+          </div>
+      </div>
+  </div>
+</div>
+    {% autoescape off %}
+    <script>
+      // varialble declaration
+
+      var d = document.getElementsByClassName("main");
+
+      //function declaration
+
+      __init__();
+      ongoing_task();
+
+
+      // function defination
+
+      function __init__(){
+        for(let i = 0 ;i < d.length ; i++){
+          d[i].onclick = function(){
+            console.log(d[i].id);
+          };
+        }
+      }
+
+      function ongoing_task(){
+  			let xhr = new XMLHttpRequest();
+  			xhr.open('get', 'http://127.0.0.1:8000/ongoing_task');
+  			xhr.send();
+
+  			xhr.onload = function() {
+  			    //console.log(JSON.parse(xhr.response)['pump_status']);
+            //onsole.log(JSON.parse(xhr.response)['foo'])
+            var tasks = JSON.parse(xhr.response)['task'];
+            var status = JSON.parse(xhr.response)['status'];
+            console.log(tasks);
+            console.log(status);
+            for(var j =0 ; j<2;j++){
+            for(var i=0; i<tasks.length;i++){
+              add_task(tasks[i],status[i]);
+            }
+          }
+          var parent = document.getElementById("ongoing_task_add");
+          var div = document.createElement("div");
+          div.style = "margin-top:6px";
+          var textnode = document.createTextNode("See More...");
+  				div.append(textnode);
+          div.onclick = function(){
+            alert("ss");
+          };
+          parent.append(div);
+  			};
+  		}
+
+      function add_task(tasks,status){
+        var parent = document.getElementById("ongoing_task_add");
+        var div = document.createElement("div");
+          if(status=="P"){
+            div.style = "border-color:black;background-color:red;color:white;margin-top:2px;padding:1px;width:98%;border-style:solid;border-width:2px;font-size:30px;";
+          }
+          else{
+            div.style = "border-color:black;background-color:orange;color:white;margin-top:2px;padding:1px;width:98%;border-style:solid;border-width:2px;font-size:30px;";
+          }
+        var textnode = document.createTextNode(tasks);
+        textnode.id="task_name";
+				div.append(textnode);
+        parent.append(div);
+      }
+
+
+    </script>
+    {% endautoescape %}
+</body>
+
+</html>
